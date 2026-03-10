@@ -1,21 +1,21 @@
 import { Link, useLocation } from "wouter";
-import { 
-  LayoutDashboard, 
-  Users, 
-  Hotel, 
-  CalendarDays, 
-  Building2, 
+import {
+  LayoutDashboard,
+  Users,
+  BedDouble,
+  CalendarDays,
+  Building2,
   Briefcase,
-  UserPlus
+  UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Finance Overview", href: "/", icon: LayoutDashboard },
   { name: "Committees", href: "/committees", icon: Users },
-  { name: "Hotel Rooms", href: "/hotels", icon: Hotel },
+  { name: "Hotel Rooms", href: "/hotels", icon: BedDouble },
   { name: "Schedule", href: "/schedule", icon: CalendarDays },
-  { name: "Sponsors & Cos", href: "/sponsors", icon: Building2 },
+  { name: "Sponsors & Companies", href: "/sponsors", icon: Building2 },
   { name: "Job Board", href: "/jobs", icon: Briefcase },
   { name: "Attendees", href: "/attendees", icon: UserPlus },
 ];
@@ -24,45 +24,55 @@ export function Sidebar() {
   const [location] = useLocation();
 
   return (
-    <aside className="w-64 h-screen border-r border-border bg-sidebar-background flex flex-col fixed left-0 top-0 z-40">
-      <div className="p-6">
-        <h1 className="text-xl font-bold tracking-tight text-sidebar-primary flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground text-sm font-black">C</span>
+    <aside className="w-64 h-screen border-r border-border bg-white flex flex-col fixed left-0 top-0 z-40 shadow-sm">
+      <div className="px-5 py-6 border-b border-border/60">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/30">
+            <span className="text-primary-foreground text-base font-black">C</span>
           </div>
-          ConfMaster
-        </h1>
+          <div>
+            <h1 className="text-base font-bold text-foreground leading-tight" data-testid="text-logo">ConfManager</h1>
+            <p className="text-xs text-muted-foreground">CISC 332 • Admin Panel</p>
+          </div>
+        </div>
       </div>
-      
-      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = location === item.href;
           return (
             <Link key={item.href} href={item.href}>
               <div
+                data-testid={`link-nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer group",
-                  isActive 
-                    ? "bg-primary text-primary-foreground font-medium shadow-md shadow-primary/10" 
-                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  "flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-150 cursor-pointer group",
+                  isActive
+                    ? "bg-primary text-primary-foreground font-semibold shadow-sm shadow-primary/20"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
-                <item.icon className={cn("w-5 h-5", isActive ? "opacity-100" : "opacity-70 group-hover:opacity-100")} />
-                {item.name}
+                <item.icon
+                  className={cn(
+                    "w-4.5 h-4.5 shrink-0",
+                    isActive ? "opacity-100" : "opacity-60 group-hover:opacity-90"
+                  )}
+                  size={18}
+                />
+                <span className="text-sm">{item.name}</span>
               </div>
             </Link>
           );
         })}
       </nav>
-      
-      <div className="p-6 border-t border-border mt-auto">
+
+      <div className="px-5 py-4 border-t border-border/60">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-semibold">
-            A
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <span className="text-primary text-sm font-bold">A</span>
           </div>
           <div>
-            <p className="text-sm font-semibold">Admin User</p>
-            <p className="text-xs text-muted-foreground">Organizer</p>
+            <p className="text-xs font-semibold text-foreground">Conference Admin</p>
+            <p className="text-[11px] text-muted-foreground">Organizer</p>
           </div>
         </div>
       </div>
