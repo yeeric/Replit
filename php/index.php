@@ -11,6 +11,27 @@ require_once __DIR__ . '/layout.php';
 $path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path   = ($path === '' || $path === null) ? '/' : $path;
 
+// Debug endpoint — surface DB/env status in production
+if ($path === '/debug-status') {
+    header('Content-Type: text/plain');
+    echo "PHP: " . phpversion() . "\n";
+    $dbUrl = getenv('DATABASE_URL');
+    echo "DATABASE_URL set: " . ($dbUrl ? 'yes (len=' . strlen($dbUrl) . ')' : 'NO') . "\n";
+    echo "PGHOST: " . (getenv('PGHOST') ?: 'not set') . "\n";
+    echo "PGPORT: " . (getenv('PGPORT') ?: 'not set') . "\n";
+    echo "PGDATABASE: " . (getenv('PGDATABASE') ?: 'not set') . "\n";
+    try {
+        $db = getDb();
+        $row = $db->query("SELECT COUNT(*) AS n FROM attendee")->fetch();
+        echo "DB connection: OK\n";
+        echo "Attendees count: " . ($row['n'] ?? '?') . "\n";
+    } catch (Throwable $e) {
+        echo "DB connection: FAILED\n";
+        echo "Error: " . $e->getMessage() . "\n";
+    }
+    exit;
+}
+
 // Route to the correct page handler
 $routes = [
     '/'           => __DIR__ . '/pages/dashboard.php',
