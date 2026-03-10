@@ -1,7 +1,6 @@
 <?php
 /**
- * Shared HTML layout helpers for the CISC 332 Conference app.
- * Every page uses renderLayout() to wrap its content in the sidebar shell.
+ * Shared HTML layout — Salesforce Lightning Design System colour scheme.
  */
 
 function pageHead(string $title): string {
@@ -19,21 +18,40 @@ function pageHead(string $title): string {
       theme: {
         extend: {
           colors: {
-            primary: { DEFAULT: '#2563eb', dark: '#1d4ed8', light: '#dbeafe' }
+            /* Salesforce Lightning palette */
+            sf: {
+              navy:    '#032d60',  /* sidebar background */
+              navymd: '#0a2e5c',  /* sidebar hover / active */
+              navyli: '#0b3d91',  /* sidebar divider tint */
+              blue:   '#0176d3',  /* primary action blue */
+              bluehv: '#014486',  /* primary hover */
+              blueli: '#d8edff',  /* light blue background */
+              bluebr: '#a8c8e8',  /* blue border */
+              bg:     '#f3f2f2',  /* app background */
+              border: '#dddbda',  /* card / input borders */
+              bordli: '#e5e4e2',  /* light divider */
+              text:   '#3e3e3c',  /* primary text */
+              muted:  '#706e6b',  /* secondary / placeholder text */
+              navtxt: '#c9dff5',  /* sidebar inactive text */
+              green:  '#2e844a',  /* success dark */
+              greenli:'#4bca81',  /* success light */
+              red:    '#ba0517',  /* destructive */
+              redli:  '#fcdbd9',  /* destructive bg */
+              redbr:  '#f4b8b3',  /* destructive border */
+            }
           }
         }
       }
     }
   </script>
   <style>
-    [x-cloak] { display: none !important; }
-    dialog::backdrop { background: rgba(0,0,0,0.5); }
-    dialog { border-radius: 0.75rem; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 0; width: min(540px, 95vw); }
+    dialog::backdrop { background: rgba(3,45,96,0.55); }
+    dialog { border-radius: 0.5rem; border: 1px solid #dddbda; box-shadow: 0 8px 32px rgba(3,45,96,0.18); padding: 0; width: min(520px, 95vw); }
     .htmx-indicator { opacity: 0; transition: opacity 200ms; }
     .htmx-request .htmx-indicator { opacity: 1; }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 flex h-screen overflow-hidden">
+<body class="bg-sf-bg text-sf-text flex h-screen overflow-hidden">
 HTML;
 }
 
@@ -48,24 +66,36 @@ function sidebar(string $active): string {
         '/attendees'  => ['icon' => '🎫', 'label' => 'Attendees'],
     ];
 
-    $html  = '<aside class="w-64 flex-shrink-0 bg-slate-900 text-white flex flex-col h-screen overflow-y-auto">';
-    $html .= '<div class="px-6 py-5 border-b border-slate-700">';
-    $html .= '<p class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Conference</p>';
-    $html .= '<h1 class="text-lg font-bold text-white mt-0.5">CISC 332</h1>';
+    $html  = '<aside class="w-64 flex-shrink-0 flex flex-col h-screen overflow-y-auto" style="background:#032d60;">';
+
+    /* Branding header */
+    $html .= '<div class="px-5 py-4" style="border-bottom:1px solid #0a2e5c;">';
+    $html .= '<p class="text-xs font-semibold uppercase tracking-widest" style="color:#7ba5c9;">Conference</p>';
+    $html .= '<h1 class="text-base font-bold text-white mt-0.5 leading-tight">CISC 332</h1>';
     $html .= '</div>';
-    $html .= '<nav class="flex-1 px-3 py-4 space-y-1">';
+
+    $html .= '<nav class="flex-1 px-2 py-3 space-y-0.5">';
 
     foreach ($links as $href => $info) {
-        $isActive = ($href === $active) || ($active === '/' && $href === '/');
-        $cls = $isActive
-            ? 'flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white font-medium text-sm'
-            : 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white text-sm transition-colors';
-        $html .= "<a href=\"{$href}\" class=\"{$cls}\">";
-        $html .= "<span>{$info['icon']}</span><span>{$info['label']}</span></a>";
+        $isActive = ($href === $active);
+        if ($isActive) {
+            $cls  = 'flex items-center gap-3 px-3 py-2.5 rounded text-white font-semibold text-sm';
+            $style = 'background:#0a2e5c; border-left:3px solid #0176d3;';
+        } else {
+            $cls  = 'flex items-center gap-3 px-3 py-2.5 rounded text-sm transition-colors';
+            $style = 'color:#c9dff5; border-left:3px solid transparent;';
+        }
+        $html .= "<a href=\"{$href}\" class=\"{$cls}\" style=\"{$style}\"";
+        if (!$isActive) {
+            $html .= " onmouseover=\"this.style.background='#0a2e5c';this.style.color='#ffffff'\"";
+            $html .= " onmouseout=\"this.style.background='';this.style.color='#c9dff5'\"";
+        }
+        $html .= ">";
+        $html .= "<span class=\"text-base\">{$info['icon']}</span><span>{$info['label']}</span></a>";
     }
 
     $html .= '</nav>';
-    $html .= '<div class="px-6 py-4 border-t border-slate-700 text-xs text-slate-500">PHP + HTMX + Tailwind</div>';
+    $html .= '<div class="px-5 py-3 text-xs" style="border-top:1px solid #0a2e5c; color:#7ba5c9;">PHP · HTMX · Tailwind</div>';
     $html .= '</aside>';
     return $html;
 }
@@ -73,8 +103,8 @@ function sidebar(string $active): string {
 function renderLayout(string $title, string $active, string $content): void {
     echo pageHead($title);
     echo sidebar($active);
-    echo '<main class="flex-1 overflow-y-auto">';
-    echo '<div class="max-w-5xl mx-auto px-6 py-8">';
+    echo '<main class="flex-1 overflow-y-auto bg-sf-bg">';
+    echo '<div class="max-w-5xl mx-auto px-6 py-7">';
     echo $content;
     echo '</div></main>';
     echo '</body></html>';

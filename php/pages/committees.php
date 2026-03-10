@@ -4,7 +4,6 @@ require_once __DIR__ . '/../layout.php';
 
 $db = getDb();
 
-// Handle HTMX partial: return only the members table
 if (!empty($_SERVER['HTTP_HX_REQUEST']) && isset($_GET['id'])) {
     $id   = (int) $_GET['id'];
     $stmt = $db->prepare("
@@ -18,17 +17,19 @@ if (!empty($_SERVER['HTTP_HX_REQUEST']) && isset($_GET['id'])) {
     $members = $stmt->fetchAll();
 
     if (empty($members)) {
-        echo '<p class="text-gray-400 text-sm py-4">No members found for this committee.</p>';
+        echo '<p class="text-sf-muted text-sm py-4">No members found for this committee.</p>';
     } else {
         echo '<table class="w-full text-sm">';
-        echo '<thead><tr class="text-left text-gray-400 border-b border-gray-100 text-xs uppercase tracking-wide">';
-        echo '<th class="pb-3 font-medium">#</th><th class="pb-3 font-medium">First Name</th><th class="pb-3 font-medium">Last Name</th>';
-        echo '</tr></thead><tbody class="divide-y divide-gray-100">';
+        echo '<thead><tr class="text-left border-b border-sf-bordli">';
+        echo '<th class="pb-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">#</th>';
+        echo '<th class="pb-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">First Name</th>';
+        echo '<th class="pb-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">Last Name</th>';
+        echo '</tr></thead><tbody class="divide-y divide-sf-bordli">';
         foreach ($members as $m) {
             echo "<tr>";
-            echo "<td class=\"py-3 text-gray-400\">{$m['memberid']}</td>";
-            echo "<td class=\"py-3 font-medium\">{$m['firstname']}</td>";
-            echo "<td class=\"py-3\">{$m['lastname']}</td>";
+            echo "<td class=\"py-3 text-sf-muted\">{$m['memberid']}</td>";
+            echo "<td class=\"py-3 font-medium text-sf-text\">{$m['firstname']}</td>";
+            echo "<td class=\"py-3 text-sf-text\">{$m['lastname']}</td>";
             echo "</tr>";
         }
         echo '</tbody></table>';
@@ -36,34 +37,35 @@ if (!empty($_SERVER['HTTP_HX_REQUEST']) && isset($_GET['id'])) {
     exit;
 }
 
-// Full page: load all committees for the dropdown
 $committees = $db->query("SELECT committeeid, committeename FROM subcommittee ORDER BY committeeid")->fetchAll();
 
 $options = '';
 foreach ($committees as $c) {
-    $options .= "<option value=\"{$c['committeeid']}\">{$c['committeename']}</option>";
+    $options .= "<option value=\"{$c['committeeid']}\">" . htmlspecialchars($c['committeename']) . "</option>";
 }
 
 $content = <<<HTML
-<h2 class="text-2xl font-bold text-gray-800 mb-1">Committees</h2>
-<p class="text-gray-500 text-sm mb-6">Select a sub-committee to view its members</p>
+<h2 class="text-xl font-bold text-sf-text mb-0.5">Committees</h2>
+<p class="text-sf-muted text-sm mb-5">Select a sub-committee to view its members</p>
 
-<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-  <div class="px-6 py-4 border-b border-gray-100">
-    <label for="committee-select" class="block text-sm font-medium text-gray-700 mb-2">Sub-committee</label>
-    <select id="committee-select" name="id"
-      class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      hx-get="/committees"
-      hx-target="#members-container"
-      hx-trigger="change"
-      hx-indicator="#loading">
-      <option value="">— Select a committee —</option>
-      {$options}
-    </select>
-    <span id="loading" class="htmx-indicator ml-2 text-blue-500 text-sm">Loading…</span>
+<div class="bg-white rounded border border-sf-border shadow-sm overflow-hidden">
+  <div class="px-5 py-4 border-b border-sf-bordli bg-sf-bg">
+    <label for="committee-select" class="block text-xs font-semibold text-sf-muted uppercase tracking-wide mb-2">Sub-committee</label>
+    <div class="flex items-center gap-3">
+      <select id="committee-select" name="id"
+        class="w-72 border border-sf-border rounded px-3 py-2 text-sm text-sf-text bg-white focus:outline-none focus:ring-2 focus:ring-sf-blue focus:border-sf-blue"
+        hx-get="/committees"
+        hx-target="#members-container"
+        hx-trigger="change"
+        hx-indicator="#loading">
+        <option value="">— Select a committee —</option>
+        {$options}
+      </select>
+      <span id="loading" class="htmx-indicator text-sf-blue text-sm">Loading…</span>
+    </div>
   </div>
-  <div id="members-container" class="px-6 py-4 min-h-[80px]">
-    <p class="text-gray-400 text-sm">Select a committee above to see its members.</p>
+  <div id="members-container" class="px-5 py-4 min-h-[80px]">
+    <p class="text-sf-muted text-sm">Select a committee above to see its members.</p>
   </div>
 </div>
 HTML;
