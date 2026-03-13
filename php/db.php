@@ -14,10 +14,10 @@ function getDb(): PDO {
         // Parse the URL: postgresql://user:pass@host:port/dbname?params
         $p = parse_url($databaseUrl);
         $host   = $p['host'] ?? 'localhost';
-        $port   = $p['port'] ?? 5432;
+        $port   = $p['port'] ?? 54322;
         $dbname = ltrim($p['path'] ?? '/postgres', '/');
         $user   = $p['user'] ?? 'postgres';
-        $pass   = $p['pass'] ?? '';
+        $pass   = $p['pass'] ?? 'postgres';
 
         // Preserve any query string options (e.g. sslmode=disable)
         $options = '';
@@ -34,10 +34,10 @@ function getDb(): PDO {
     } else {
         // Fallback to individual PG* vars
         $host   = getenv('PGHOST')     ?: 'localhost';
-        $port   = getenv('PGPORT')     ?: '5432';
+        $port   = getenv('PGPORT')     ?: '54322';
         $dbname = getenv('PGDATABASE') ?: 'postgres';
         $user   = getenv('PGUSER')     ?: 'postgres';
-        $pass   = getenv('PGPASSWORD') ?: '';
+        $pass   = getenv('PGPASSWORD') ?: 'postgres';
         $dsn    = "pgsql:host={$host};port={$port};dbname={$dbname}";
     }
 
