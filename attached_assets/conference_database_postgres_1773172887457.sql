@@ -349,6 +349,102 @@ INSERT INTO SpeaksAt (SpeakerID, SessionID) VALUES
     (8, 4),
     (1, 8);
 
+-- ============================================================
+-- ADDITIONAL TEST DATA
+-- ============================================================
+
+INSERT INTO HotelRoom (RoomNumber, NumberOfBeds) VALUES
+    (104, 2), (105, 2), (106, 3), (107, 3), (108, 2), (109, 1), (110, 2),
+    (111, 1), (112, 2), (113, 2), (114, 3), (115, 1),
+    (116, 2), (117, 2), (118, 3), (119, 1), (120, 2);
+
+INSERT INTO CommitteeMember (MemberID, FirstName, LastName) VALUES
+    (9,  'Mia',     'Thompson'),
+    (10, 'Noah',    'Patel'),
+    (11, 'Olivia',  'Hernandez'),
+    (12, 'Patrick', 'Osei'),
+    (13, 'Quinn',   'Leblanc'),
+    (14, 'Ravi',    'Subramanian'),
+    (15, 'Sara',    'Kowalski'),
+    (16, 'Tariq',   'Hassan'),
+    (17, 'Uma',     'Fitzgerald'),
+    (18, 'Victor',  'Lapointe'),
+    (19, 'Wendy',   'Okafor'),
+    (20, 'Xavier',  'Bergeron');
+
+INSERT INTO MemberOfCommittee (MemberID, CommitteeID) VALUES
+    (9,  1), (10, 1),
+    (11, 2), (12, 2),
+    (13, 3), (14, 3),
+    (15, 4), (16, 4),
+    (17, 5), (18, 5),
+    (19, 6), (20, 6),
+    (9,  5), (10, 6);
+
+INSERT INTO Session (SessionID, SessionName, Date, StartTime, EndTime, RoomLocation) VALUES
+    (9,  'Quantum Computing Intro',    '2025-10-17', '09:00:00', '10:30:00', 'Main Hall'),
+    (10, 'Blockchain Applications',    '2025-10-17', '11:00:00', '12:30:00', 'Room A'),
+    (11, 'Open Source Contributions',  '2025-10-17', '14:00:00', '15:30:00', 'Room B'),
+    (12, 'Career Networking Lunch',    '2025-10-17', '16:00:00', '17:30:00', 'Banquet Hall'),
+    (13, 'Workshop: System Design',    '2025-10-18', '09:00:00', '11:00:00', 'Room A'),
+    (14, 'Panel: Future of Work & AI', '2025-10-18', '11:15:00', '12:45:00', 'Main Hall');
+
+INSERT INTO Attendee (AttendeeID, FirstName, LastName, Email, AttendeeType) VALUES
+    (19, 'Lena',    'Kowalski',  'lena.k@queensu.ca',         'Student'),
+    (20, 'Derek',   'Osei',      'derek.osei@queensu.ca',     'Student'),
+    (21, 'Fatima',  'Al-Zahra',  'fatima.z@queensu.ca',       'Student'),
+    (22, 'Carlos',  'Reyes',     'carlos.r@queensu.ca',       'Student'),
+    (23, 'Hannah',  'Brennan',   'h.brennan@queensu.ca',      'Student'),
+    (24, 'Sam',     'Nakamura',  's.nakamura@queensu.ca',     'Student'),
+    (25, 'Zoe',     'Clifford',  'z.clifford@queensu.ca',     'Student'),
+    (26, 'Alex',    'Dubois',    'a.dubois@queensu.ca',       'Student');
+
+INSERT INTO Student (AttendeeID, RoomNumberStaysIn) VALUES
+    (19, 104), (20, 105), (21, 106), (22, 107),
+    (23, 108), (24, 111), (25, 112), (26, NULL);
+
+INSERT INTO Attendee (AttendeeID, FirstName, LastName, Email, AttendeeType) VALUES
+    (27, 'Claire',  'Fontaine',  'c.fontaine@rbc.com',        'Professional'),
+    (28, 'Marcus',  'Webb',      'm.webb@shopify.com',        'Professional'),
+    (29, 'Sunita',  'Rao',       's.rao@deloitte.com',        'Professional'),
+    (30, 'Patrick', 'O Brien',   'p.obrien@microsoft.com',    'Professional'),
+    (31, 'Elena',   'Marchetti', 'e.marchetti@opentext.com',  'Professional'),
+    (32, 'James',   'Thornton',  'j.thornton@blackberry.com', 'Professional');
+
+INSERT INTO Professional (AttendeeID) VALUES
+    (27), (28), (29), (30), (31), (32);
+
+INSERT INTO Attendee (AttendeeID, FirstName, LastName, Email, AttendeeType) VALUES
+    (33, 'Amara',  'Diallo',   'a.diallo@cognizant.com', 'Sponsor'),
+    (34, 'Victor', 'Rousseau', 'v.rousseau@rbc.com',     'Sponsor'),
+    (35, 'Linda',  'Chen',     'l.chen@shopify.com',     'Sponsor');
+
+INSERT INTO Sponsor (AttendeeID, SponsorLevel, EmailsSent, CompanyID) VALUES
+    (33, 'Bronze',   0, 1),
+    (34, 'Platinum', 1, 2),
+    (35, 'Silver',   2, 1);
+
+INSERT INTO JobAd (JobTitle, Location, City, Province, PayRate, PostedByCompanyID) VALUES
+    ('Product Manager',          'Remote',          'Toronto',   'Ontario',          80.00, 3),
+    ('Backend Engineer',         'Remote',          'Vancouver', 'British Columbia', 75.00, 1),
+    ('iOS Developer',            'Head Office',     'Waterloo',  'Ontario',          65.00, 5),
+    ('Data Analyst II',          'Downtown Office', 'Toronto',   'Ontario',          55.00, 2),
+    ('QA Engineer',              'Remote',          'Ottawa',    'Ontario',          60.00, 6),
+    ('Solutions Architect',      'Innovation Hub',  'Calgary',   'Alberta',          95.00, 4),
+    ('Frontend Developer',       'Downtown Office', 'Montreal',  'Quebec',           62.00, 7),
+    ('Cybersecurity Specialist', 'Remote',          'Toronto',   'Ontario',          85.00, 5);
+
+INSERT INTO Attends (AttendeeID, SessionID) VALUES
+    (19, 9), (19, 10), (20, 9), (20, 11),
+    (21, 9), (21, 12), (22, 10), (22, 13),
+    (23, 9), (23, 14), (24, 10), (24, 11),
+    (25, 13),(25, 14), (26, 9),
+    (27, 9), (27, 12), (28, 10), (28, 13),
+    (29, 11),(29, 14), (30, 9), (30, 12),
+    (31, 13),(32, 14),
+    (33, 9), (33, 12), (34, 9), (34, 14),
+    (35, 10),(35, 13);
+
 -- Keep identity sequences aligned after explicit ID inserts.
 SELECT setval(pg_get_serial_sequence('company', 'companyid'), COALESCE((SELECT MAX(companyid) FROM company), 1), true);
 SELECT setval(pg_get_serial_sequence('committeemember', 'memberid'), COALESCE((SELECT MAX(memberid) FROM committeemember), 1), true);
