@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-03-27T07:17:27.135Z"
+last_updated: "2026-03-27T07:32:03.536Z"
 progress:
   total_phases: 4
   completed_phases: 1
@@ -53,8 +53,8 @@ See: `.planning/PROJECT.md` (updated 2026-03-26)
 
 ### Pending Todos
 
-- Count: 0
-- Latest: none
+- Count: 1
+- Latest: `.planning/todos/pending/2026-03-27-fix-attendee-table-ownership-for-migration-trigger-setup.md`
 
 ## Session Continuity
 
@@ -63,4 +63,4 @@ See: `.planning/PROJECT.md` (updated 2026-03-26)
 - Next command: `$gsd-execute-phase 2`
 
 ---
-*Last updated: 2026-03-27 after starting attendee deletion todo*
+*Last updated: 2026-03-27 after capturing migration ownership todo*
