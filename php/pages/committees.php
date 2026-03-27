@@ -10,29 +10,50 @@ $isHtmx = !empty($_SERVER['HTTP_HX_REQUEST']);
 // ── POST /committees/subcommittee ──────────────────────────────────────────────
 if ($method === 'POST' && str_ends_with($path, '/subcommittee')) {
     $name = trim($_POST['committeename'] ?? '');
-    if ($name === '') {
+    $chairFirst = trim($_POST['chair_firstname'] ?? '');
+    $chairLast = trim($_POST['chair_lastname'] ?? '');
+    if ($name === '' || $chairFirst === '' || $chairLast === '') {
         http_response_code(400);
-        echo '<p class="text-sm" style="color:#ba0517;">Subcommittee name is required.</p>';
+        echo '<p class="text-sm" style="color:#ba0517;">Subcommittee name and chair first/last name are required.</p>';
         exit;
     }
 
     try {
-        $stmt = $db->prepare("
-            INSERT INTO subcommittee (committeeid, committeename)
-            SELECT COALESCE(MAX(committeeid), 0) + 1, ?
+        $db->beginTransaction();
+
+        $memberStmt = $db->prepare("
+            INSERT INTO committeemember (memberid, firstname, lastname)
+            SELECT COALESCE(MAX(memberid), 0) + 1, ?, ?
+            FROM committeemember
+            RETURNING memberid
+        ");
+        $memberStmt->execute([$chairFirst, $chairLast]);
+        $chairMemberId = (int)$memberStmt->fetchColumn();
+
+        $committeeStmt = $db->prepare("
+            INSERT INTO subcommittee (committeeid, committeename, chairmemberid)
+            SELECT COALESCE(MAX(committeeid), 0) + 1, ?, ?
             FROM subcommittee
             RETURNING committeeid, committeename
         ");
-        $stmt->execute([$name]);
-        $created = $stmt->fetch();
+        $committeeStmt->execute([$name, $chairMemberId]);
+        $created = $committeeStmt->fetch();
         $id = (int)$created['committeeid'];
         $safeName = htmlspecialchars($created['committeename']);
+
+        $linkStmt = $db->prepare("INSERT INTO memberofcommittee (committeeid, memberid) VALUES (?, ?)");
+        $linkStmt->execute([$id, $chairMemberId]);
+
+        $db->commit();
 
         // Append to both committee selectors.
         echo "<option value=\"{$id}\">{$safeName}</option>";
         echo "<option value=\"{$id}\" hx-swap-oob=\"beforeend:#member-committeeid\">{$safeName}</option>";
         echo "<div id=\"committee-create-result\" hx-swap-oob=\"innerHTML\"><p class=\"text-sm\" style=\"color:#2e844a;\">Subcommittee created.</p></div>";
     } catch (Throwable $e) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
         http_response_code(500);
         echo '<p class="text-sm" style="color:#ba0517;">Unable to create subcommittee.</p>';
     }
@@ -159,12 +180,25 @@ $content = <<<HTML
     <form hx-post="/committees/subcommittee"
           hx-target="#committee-select"
           hx-swap="beforeend"
+          hx-on::after-request="if(event.detail.successful) this.reset()"
           class="space-y-3">
       <div>
         <label class="block text-xs font-semibold text-sf-muted uppercase tracking-wide mb-1">Name</label>
         <input type="text" name="committeename" required
           class="w-full border border-sf-border rounded px-3 py-2 text-sm text-sf-text focus:outline-none focus:ring-2 focus:ring-sf-blue focus:border-sf-blue"
           placeholder="e.g. Accessibility Committee">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-sf-muted uppercase tracking-wide mb-1">Chair First Name</label>
+          <input type="text" name="chair_firstname" required
+            class="w-full border border-sf-border rounded px-3 py-2 text-sm text-sf-text focus:outline-none focus:ring-2 focus:ring-sf-blue focus:border-sf-blue">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-sf-muted uppercase tracking-wide mb-1">Chair Last Name</label>
+          <input type="text" name="chair_lastname" required
+            class="w-full border border-sf-border rounded px-3 py-2 text-sm text-sf-text focus:outline-none focus:ring-2 focus:ring-sf-blue focus:border-sf-blue">
+        </div>
       </div>
       <div class="flex items-center justify-between gap-3">
         <button type="submit"
