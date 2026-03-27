@@ -7,10 +7,10 @@
 
 ### Migration & Data Integrity
 
-- [ ] **DATA-01**: App startup fails clearly if critical schema migration steps fail
-- [ ] **DATA-02**: Sponsor seed logic uses a valid, consistent `sponsorlevel` type path
-- [ ] **DATA-03**: Migration output distinguishes fatal errors from non-fatal informational messages
-- [ ] **DATA-04**: Seed process is idempotent across repeated startup runs
+- [x] **DATA-01**: App startup fails clearly if critical schema migration steps fail
+- [x] **DATA-02**: Sponsor seed logic uses a valid, consistent `sponsorlevel` type path
+- [x] **DATA-03**: Migration output distinguishes fatal errors from non-fatal informational messages
+- [x] **DATA-04**: Seed process is idempotent across repeated startup runs
 
 ### Security & Safety
 
@@ -52,10 +52,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Complete |
+| DATA-02 | Phase 1 | Complete |
+| DATA-03 | Phase 1 | Complete |
+| DATA-04 | Phase 1 | Complete |
 | SECU-01 | Phase 2 | Pending |
 | SECU-02 | Phase 2 | Pending |
 | SECU-03 | Phase 2 | Pending |

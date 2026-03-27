@@ -31,7 +31,7 @@ Requirements: DATA-01, DATA-02, DATA-03, DATA-04
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Build Phase 1 CLI validation harness (fatal-path, enum-path, log classification, repeat-run idempotency)
+- [x] 01-01-PLAN.md — Build Phase 1 CLI validation harness (fatal-path, enum-path, log classification, repeat-run idempotency)
 - [ ] 01-02-PLAN.md — Harden migration/startup behavior for fail-fast safety, enum correctness, and deterministic reseeding
 
 **UI hint**: no
