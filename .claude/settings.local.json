@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/ericxye/code/cisc332/Replit -type f \\\\\\(-name *.test.* -o -name *.spec.* -o -name *test* \\\\\\))",
+      "Bash(curl -s http://localhost:5000/debug-status)",
+      "Bash(php php/migrate.php)",
+      "Bash(php:*)"
+    ]
+  }
+}
