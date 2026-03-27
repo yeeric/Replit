@@ -32,7 +32,7 @@ Requirements: DATA-01, DATA-02, DATA-03, DATA-04
 
 Plans:
 - [x] 01-01-PLAN.md — Build Phase 1 CLI validation harness (fatal-path, enum-path, log classification, repeat-run idempotency)
-- [ ] 01-02-PLAN.md — Harden migration/startup behavior for fail-fast safety, enum correctness, and deterministic reseeding
+- [x] 01-02-PLAN.md — Harden migration/startup behavior for fail-fast safety, enum correctness, and deterministic reseeding
 
 **UI hint**: no
 
@@ -84,4 +84,4 @@ Success criteria:
 3. Contributor setup and run workflow is clear and conflict-free.
 
 ---
-*Last updated: 2026-03-26 after roadmap creation*
+*Last updated: 2026-03-27 after completing phase 01 plans*
