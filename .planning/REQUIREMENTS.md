@@ -52,27 +52,27 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | TBD | Pending |
-| DATA-02 | TBD | Pending |
-| DATA-03 | TBD | Pending |
-| DATA-04 | TBD | Pending |
-| SECU-01 | TBD | Pending |
-| SECU-02 | TBD | Pending |
-| SECU-03 | TBD | Pending |
-| SECU-04 | TBD | Pending |
-| TEST-01 | TBD | Pending |
-| TEST-02 | TBD | Pending |
-| TEST-03 | TBD | Pending |
-| TEST-04 | TBD | Pending |
-| RUNT-01 | TBD | Pending |
-| RUNT-02 | TBD | Pending |
-| RUNT-03 | TBD | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Pending |
+| SECU-01 | Phase 2 | Pending |
+| SECU-02 | Phase 2 | Pending |
+| SECU-03 | Phase 2 | Pending |
+| SECU-04 | Phase 2 | Pending |
+| TEST-01 | Phase 3 | Pending |
+| TEST-02 | Phase 3 | Pending |
+| TEST-03 | Phase 3 | Pending |
+| TEST-04 | Phase 3 | Pending |
+| RUNT-01 | Phase 4 | Pending |
+| RUNT-02 | Phase 4 | Pending |
+| RUNT-03 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15 ⚠️
+- Mapped to phases: 15
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after initial definition*
+*Last updated: 2026-03-26 after roadmap creation*
