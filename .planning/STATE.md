@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-03-27T07:34:17.412Z"
+last_updated: "2026-03-27T07:35:46.275Z"
 progress:
   total_phases: 4
   completed_phases: 1
@@ -53,8 +53,8 @@ See: `.planning/PROJECT.md` (updated 2026-03-26)
 
 ### Pending Todos
 
-- Count: 2
-- Latest: `.planning/todos/pending/2026-03-27-add-feature-to-create-job-ad-for-a-company.md`
+- Count: 3
+- Latest: `.planning/todos/pending/2026-03-27-add-feature-to-create-subcommittee-and-committee-member.md`
 
 ## Session Continuity
 
@@ -63,4 +63,4 @@ See: `.planning/PROJECT.md` (updated 2026-03-26)
 - Next command: `$gsd-execute-phase 2`
 
 ---
-*Last updated: 2026-03-27 after capturing job-ad creation todo*
+*Last updated: 2026-03-27 after capturing committee creation todo*
