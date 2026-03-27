@@ -19,10 +19,10 @@ Conference organizers can reliably manage core conference data and workflows fro
 - ✓ Organizer can manage sponsor companies and view sponsor attendees — existing
 - ✓ Organizer can browse job postings and filter by company — existing
 - ✓ Organizer can browse attendees by type and register new attendees — existing
+- ✓ Migration and seed process is deterministic and free of hidden failures — validated in Phase 1 (Migration Reliability Baseline)
 
 ### Active
 
-- [ ] Migration and seed process is deterministic and free of hidden failures
 - [ ] Mutating endpoints include baseline request hardening (CSRF and safer error handling)
 - [ ] Core workflows have automated backend/integration tests for regression protection
 - [ ] Runtime and tooling configuration is consistent and documented for contributors
@@ -49,9 +49,9 @@ The project is a brownfield PHP monolith with route handlers in `php/pages/*.php
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Treat this as brownfield hardening before major feature expansion | Existing app already delivers core workflows; reliability/security gaps are the highest risk | — Pending |
-| Keep server-rendered PHP + HTMX architecture for this milestone | Fastest path to improve correctness without architectural churn | — Pending |
-| Use phased requirement mapping with explicit traceability | Ensures each improvement is buildable and verifiable | — Pending |
+| Treat this as brownfield hardening before major feature expansion | Existing app already delivers core workflows; reliability/security gaps are the highest risk | ✓ Confirmed in Phase 1 |
+| Keep server-rendered PHP + HTMX architecture for this milestone | Fastest path to improve correctness without architectural churn | ✓ Confirmed in Phase 1 |
+| Use phased requirement mapping with explicit traceability | Ensures each improvement is buildable and verifiable | ✓ In use (Phase 1 complete) |
 
 ## Evolution
 
@@ -71,4 +71,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after initialization*
+*Last updated: 2026-03-27 after phase 1 completion*
