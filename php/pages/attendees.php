@@ -7,6 +7,32 @@ $path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 $isHtmx = !empty($_SERVER['HTTP_HX_REQUEST']);
 
+function attendeeRow(array $a): string {
+    $id    = (int)$a['attendeeid'];
+    $name  = htmlspecialchars("{$a['firstname']} {$a['lastname']}");
+    $email = htmlspecialchars($a['email']);
+    $fee   = '$' . number_format((float)$a['fee'], 2);
+
+    return <<<HTML
+<tr id="attendee-row-{$id}" class="border-b border-sf-bordli last:border-0">
+  <td class="px-5 py-3 text-sf-muted">{$id}</td>
+  <td class="px-5 py-3 font-medium text-sf-text">{$name}</td>
+  <td class="px-5 py-3 text-sf-muted">{$email}</td>
+  <td class="px-5 py-3 font-semibold" style="color:#2e844a;">{$fee}</td>
+  <td class="px-5 py-3 text-right">
+    <button hx-delete="/attendees/delete?id={$id}"
+      hx-target="#attendee-row-{$id}" hx-swap="outerHTML"
+      hx-confirm="Delete {$name}?"
+      class="text-xs font-semibold border rounded px-3 py-1.5 transition-colors"
+      style="color:#ba0517; border-color:#f4b8b3;"
+      onmouseover="this.style.background='#fcdbd9'" onmouseout="this.style.background=''">
+      Delete
+    </button>
+  </td>
+</tr>
+HTML;
+}
+
 // ── POST /attendees/add ───────────────────────────────────────────────────────
 if ($method === 'POST' && str_ends_with($path, '/add')) {
     $fn   = trim($_POST['firstname']    ?? '');
@@ -43,37 +69,44 @@ if ($method === 'POST' && str_ends_with($path, '/add')) {
         exit;
     }
 
-    $fee   = '$' . number_format((float)$a['fee'], 2);
-    $name  = htmlspecialchars("{$a['firstname']} {$a['lastname']}");
-    $email = htmlspecialchars($a['email']);
     header('HX-Trigger: closeAttendeeModal');
-    echo <<<HTML
-<tr class="border-b border-sf-bordli last:border-0">
-  <td class="px-5 py-3 text-sf-muted">{$a['attendeeid']}</td>
-  <td class="px-5 py-3 font-medium text-sf-text">{$name}</td>
-  <td class="px-5 py-3 text-sf-muted">{$email}</td>
-  <td class="px-5 py-3 font-semibold" style="color:#2e844a;">{$fee}</td>
-</tr>
-HTML;
+    echo attendeeRow($a);
+    exit;
+}
+
+// ── DELETE /attendees/delete?id=X ─────────────────────────────────────────────
+if ($method === 'DELETE' && str_ends_with($path, '/delete')) {
+    $id = (int)($_GET['id'] ?? 0);
+    if ($id <= 0) {
+        http_response_code(400);
+        echo 'Invalid attendee id.';
+        exit;
+    }
+
+    try {
+        $stmt = $db->prepare("DELETE FROM attendee WHERE attendeeid = ? RETURNING attendeeid");
+        $stmt->execute([$id]);
+        if (!$stmt->fetch()) {
+            http_response_code(404);
+            echo 'Attendee not found.';
+            exit;
+        }
+        echo '';
+    } catch (Throwable $e) {
+        http_response_code(500);
+        echo 'Unable to delete attendee.';
+    }
     exit;
 }
 
 // ── HTMX partial: tab switch ──────────────────────────────────────────────────
 function renderAttendeeRows(array $rows): string {
     if (empty($rows)) {
-        return '<tr><td colspan="4" class="px-5 py-6 text-center text-sf-muted text-sm">No attendees found.</td></tr>';
+        return '<tr><td colspan="5" class="px-5 py-6 text-center text-sf-muted text-sm">No attendees found.</td></tr>';
     }
     $html = '';
     foreach ($rows as $a) {
-        $name  = htmlspecialchars("{$a['firstname']} {$a['lastname']}");
-        $email = htmlspecialchars($a['email']);
-        $fee   = '$' . number_format((float)$a['fee'], 2);
-        $html .= "<tr class=\"border-b border-sf-bordli last:border-0\">
-            <td class=\"px-5 py-3 text-sf-muted\">{$a['attendeeid']}</td>
-            <td class=\"px-5 py-3 font-medium text-sf-text\">{$name}</td>
-            <td class=\"px-5 py-3 text-sf-muted\">{$email}</td>
-            <td class=\"px-5 py-3 font-semibold\" style=\"color:#2e844a;\">{$fee}</td>
-        </tr>";
+        $html .= attendeeRow($a);
     }
     return $html;
 }
@@ -142,6 +175,7 @@ $content = <<<HTML
       <th class="px-5 py-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">Name</th>
       <th class="px-5 py-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">Email</th>
       <th class="px-5 py-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">Fee</th>
+      <th class="px-5 py-3"></th>
     </tr></thead>
     <tbody id="attendee-rows">{$rows}</tbody>
   </table>

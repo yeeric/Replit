@@ -55,7 +55,7 @@ function tierBadge(string $lvl): string {
 }
 
 $sponsors  = $db->query("
-    SELECT a.firstname, a.lastname, c.companyname, s.sponsorlevel
+    SELECT a.attendeeid, a.firstname, a.lastname, c.companyname, s.sponsorlevel
     FROM sponsor s
     INNER JOIN attendee a ON s.attendeeid = a.attendeeid
     INNER JOIN company  c ON s.companyid  = c.companyid
@@ -66,12 +66,23 @@ $companies = $db->query("SELECT companyid, companyname FROM company ORDER BY com
 
 $sponsorRows = '';
 foreach ($sponsors as $s) {
+    $id   = (int)$s['attendeeid'];
     $name = htmlspecialchars("{$s['firstname']} {$s['lastname']}");
     $comp = htmlspecialchars($s['companyname']);
-    $sponsorRows .= "<tr class=\"border-b border-sf-bordli last:border-0\">
+    $sponsorRows .= "<tr id=\"sponsor-attendee-row-{$id}\" class=\"border-b border-sf-bordli last:border-0\">
         <td class=\"px-5 py-3 font-medium text-sf-text\">{$name}</td>
         <td class=\"px-5 py-3 text-sf-muted\">{$comp}</td>
         <td class=\"px-5 py-3\">" . tierBadge($s['sponsorlevel']) . "</td>
+        <td class=\"px-5 py-3 text-right\">
+          <button hx-delete=\"/attendees/delete?id={$id}\"
+            hx-target=\"#sponsor-attendee-row-{$id}\" hx-swap=\"outerHTML\"
+            hx-confirm=\"Delete {$name}?\"
+            class=\"text-xs font-semibold border rounded px-3 py-1.5 transition-colors\"
+            style=\"color:#ba0517; border-color:#f4b8b3;\"
+            onmouseover=\"this.style.background='#fcdbd9'\" onmouseout=\"this.style.background=''\">
+            Delete
+          </button>
+        </td>
     </tr>";
 }
 
@@ -97,6 +108,7 @@ $content = <<<HTML
         <th class="px-5 py-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">Name</th>
         <th class="px-5 py-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">Company</th>
         <th class="px-5 py-3 font-semibold text-sf-muted text-xs uppercase tracking-wide">Level</th>
+        <th class="px-5 py-3"></th>
       </tr></thead>
       <tbody>{$sponsorRows}</tbody>
     </table>
